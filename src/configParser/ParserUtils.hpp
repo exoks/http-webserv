@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 19:51:49 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/07 19:51:52 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/18 22:35:45 by oussama
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -21,6 +21,7 @@
 # include <string>
 # include <sstream>
 # include <vector>
+# include <map>
 
 /*******************************************************************************
 	* ParserUtils :
@@ -31,9 +32,21 @@ namespace prs
 	typedef std::pair<std::string, std::string>		keyValuePair;
 
 	std::string   strtrim(const std::string& str);
+
 	keyValuePair  lineToPair(const std::string& line, const char sep);
+
 	std::vector<std::string> split(const std::string str, const char sep);
 
+	template <class T1, class T2>
+	typename std::map<T1 *, T2 *>::iterator find(std::map<T1 *, T2 *> map, T1 *key)
+	{
+		typename std::map<T1 *, T2 *>::iterator iter;
+
+		iter = map.begin();
+		while (iter != map.end() && !(iter->first == key))
+			++iter;
+		return (iter);
+	}
 };
 
 #endif /* __PARSERUTILS_HPP__ */

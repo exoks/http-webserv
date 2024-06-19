@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/05 12:41:44 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/11 21:51:01 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/15 16:13:33 by oussama
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -17,28 +17,23 @@
 # define __SERVER_HPP__
 
 # include "IServer.hpp"
-# include <iostream>
 # include "Directive.hpp"
 
 namespace http
 {
 	class	Server : public IServer 
 	{
-		public:
-			typedef std::string				ServerName;
-			typedef Directive::Terminals	Terminals;
-			
-			Server(void);
-			Server(Directive directive, Terminals terms);
-			~Server(void);
+	public:
+		typedef Directive::Terminals	Terminals;
+		
+		Server(void);
+		Server(std::string listen);
+		~Server(void);
 
-			int					start(void);
-
-		private:
-			ServerName			_mServerName;
-			std::string			_mConnection;
-	//		unsigned int		_mKeepaliveRequest;
-	//		unsigned long		_mKeepaliveTimeout;
+		int				start(void);
+	private:
+		std::string			_mListen;
+		std::string			_mServerNames;
 	};
 };
 

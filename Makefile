@@ -23,12 +23,14 @@ INC_DIR		:=	$(SRC_DIR)/configParser\
 
 #=== Files : =================================================================
 SRC_FILES	:=	$(SRC_DIR)/configParser/ParserUtils.cpp\
-				$(SRC_DIR)/configParser/Dictionary.cpp\
 				$(SRC_DIR)/configParser/Directive.cpp\
+				$(SRC_DIR)/configParser/Dictionary.cpp\
 				$(SRC_DIR)/configParser/ConfigParser.cpp\
-				$(SRC_DIR)/serverCoreInitializer/HttpServer.cpp\
-				$(SRC_DIR)/serverCoreInitializer/HttpProtocolFactory.cpp\
 				$(SRC_DIR)/serverCoreInitializer/Initiator.cpp\
+				$(SRC_DIR)/serverCoreInitializer/HttpSocket.cpp\
+				$(SRC_DIR)/serverCoreInitializer/HttpServer.cpp\
+				$(SRC_DIR)/serverCoreInitializer/HttpCluster.cpp\
+				$(SRC_DIR)/serverCoreInitializer/HttpProtocolFactory.cpp\
 				$(SRC_DIR)/main/main.cpp
 
 INC_FILES	:=	$(foreach dir, $(INC_DIR), $(wildcard $(dir)/*.hpp))	

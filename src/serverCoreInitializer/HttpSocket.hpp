@@ -1,37 +1,48 @@
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣦⣴⣶⣾⣿⣶⣶⣶⣶⣦⣤⣄⠀⠀⠀⠀⠀⠀⠀                                              
-//  ⠀⠀⠀⠀⠀⠀⠀⢠⡶⠻⠛⠟⠋⠉⠀⠈⠤⠴⠶⠶⢾⣿⣿⣿⣷⣦⠄⠀⠀⠀    𓐓  IProtocolFactory.hpp 𓐔           
+//  ⠀⠀⠀⠀⠀⠀⠀⢠⡶⠻⠛⠟⠋⠉⠀⠈⠤⠴⠶⠶⢾⣿⣿⣿⣷⣦⠄⠀⠀⠀          𓐓  HttpSocket.hpp 𓐔           
 //  ⠀⠀⠀⠀⠀⢀⠔⠋⠀⠀⠤⠒⠒⢲⠀⠀⠀⢀⣠⣤⣤⣬⣽⣿⣿⣿⣷⣄⠀⠀                                              
-//  ⠀⠀⠀⣀⣎⢤⣶⣾⠅⠀⠀⢀⡤⠏⠀⠀⠀⠠⣄⣈⡙⠻⢿⣿⣿⣿⣿⣿⣦⠀   Student: oezzaou <oezzaou@student.1337.ma> 
+//  ⠀⠀⠀⣀⣎⢤⣶⣾⠅⠀⠀⢀⡤⠏⠀⠀⠀⠠⣄⣈⡙⠻⢿⣿⣿⣿⣿⣿⣦⠀   Student: oussama <oezzaou@student.1337.ma> 
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
-//  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 19:42:57 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/15 18:53:11 by oussama
+//  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/18 18:46:44 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/18 22:30:45 by oussama
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
 //  ⠀⠀⠀⠀⠀⡄⠀⠀⠀⠘⢧⡀⠀⠀⠸⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠐⠋⠀⠀⠀                     𓄂 oussama ezzaou𓆃  
 //  ⠀⠀⠀⠀⠀⠘⠄⣀⡀⠸⠓⠀⠀⠀⠠⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                              
 
-//====| IServer : server interface >============================================
-# ifndef __IPROTOCOLFACTORY_HPP__
-# define __IPROTOCOLFACTORY_HPP__
+//====| HttpSocket >=============================================================
+# ifndef __HTTPSOCKET_HPP__
+# define __HTTPSOCKET_HPP__
 
-# include "IHandler.hpp"
 # include "ISocket.hpp"
-# include "IServer.hpp"
-# include <map>
 
-class	IProtocolFactory
+namespace http
 {
+	class	Socket : public ISocket
+	{
 	public:
-		virtual	~IProtocolFactory(void) {};
+		typedef ISocket::Listen Listen;
+		typedef ISocket::Fd	Fd;
+		typedef ISocket::Host	Host;
+		typedef ISocket::Port	Port;
 
-//		virtual	std::map<ISocket *, IHandler *> createHandlers(void) = 0;
+		Socket(void);
+		Socket(std::string listen);
+		~Socket(void) {};
 
-		virtual	ISocket		*createSocket(std::string listen) = 0;
-		virtual	IServer		*createServer(void) = 0;
-		virtual	IHandler	*createRecvHandler(void) = 0;
-		virtual	IHandler	*createAcceptHandler(void) = 0;
+//		Fd		getFd(void) const;
+//		Port		getPort(void) const;
+//		Host		getHost(void) const;
+		bool		operator ==(ISocket *aSocket);
+		Listen		getListen(void) const;	
+	private:
+		std::string		_mListen;
+//		Fd			_mFd;
+		Host			_mHost;
+		Port			_mPort;
+	};
 };
 
-#endif /*__IPROTOCOLFACTORY_HPP__*///=============================================
+#endif /*__HTTPSOCKET_HPP__*///=======================================
