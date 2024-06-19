@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/18 18:28:47 by oussama
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/18 22:30:34 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 12:46:30 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -23,19 +23,19 @@
 class	ISocket
 {
 	public:
-		typedef std::string	Listen;
-		typedef int		Fd;
-		typedef std::string	Host;
-		typedef std::string	Port;
+		typedef int				Fd;
+		typedef std::string		Host;
+		typedef std::string		Port;
 
 		virtual ~ISocket(void) {};
 	
-//		virtual int	getFd(void) const = 0;
-//		virtual Host	getHost(void) const = 0;
-//		virtual Port	getPort(void) const = 0;
-
 		virtual	bool	operator ==(ISocket *aSocket) = 0;	
-		virtual Listen	getListen(void) const = 0;	
+		
+		virtual std::string		getListen(void) const = 0;	
+		virtual int				getFd(void) const = 0;
+		virtual Host			getHost(void) const = 0;
+		virtual Port			getPort(void) const = 0;
+
 //		virtual	bool	createSocket(void) = 0;
 };
 

@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 08:05:02 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/18 18:31:44 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 22:54:03 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -45,11 +45,19 @@ void	Initiator::setConfigFilePath(const ConfigFile aConfigFilePath)
 	this->_mConfigFilePath = aConfigFilePath;
 }
 
+//====| addToGlobalHandlers : add protocol handlers to global handlers >========
+bool	Initiator::_addToGlobalHandlers(const Handlers aHandlers)
+{
+	(void) aHandlers;
+	return (true);
+}
+
 //====| init : server >=========================================================
 std::map<ISocket *, IHandler *>	Initiator::init(void)
 {
-	Directive			g_directive;
+	Directive				g_directive;
 	NonTerminals			nTerms;
+	Handlers				protocolHandlers;
 
 	_mConfigParser->openFile(this->_mConfigFilePath);
 	g_directive = _mConfigParser->parse();
@@ -59,9 +67,10 @@ std::map<ISocket *, IHandler *>	Initiator::init(void)
 	for (NonTermsIter iter = nTerms.begin(); iter != nTerms.end(); ++iter)
 	{
 		if (iter->first == "http")
-			; // HttpCluster::createHandlers(*iter->second.begin());
+			protocolHandlers = http::Cluster(*iter->second.begin()).createHandlers();
 		if (iter->first == "dns")
-			; // pHandler = new dns::ProtocolFactory(iter->second);
+			; // dns::Cluster(*iter->second.begin()).createHandlers();
+		_addToGlobalHandlers(protocolHandlers);
 	}
-	return (std::map<ISocket *, IHandler *>());
+	return (_mGlobalHandlers);
 }

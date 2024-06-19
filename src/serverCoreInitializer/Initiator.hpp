@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 08:00:51 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/15 17:21:43 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 22:49:12 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -18,17 +18,16 @@
 
 # include "ConfigParser.hpp"
 # include "HttpCluster.hpp"
-//# include "ISocket.hpp"
-//# include "IHandler.hpp"
 
 class	Initiator
 {
 	public:
-		typedef std::string				ConfigFile;
-		typedef Directive::NonTerminals			NonTerminals;
-		typedef Directive::Terminals			Terminals;
+		typedef std::string							ConfigFile;
+		typedef Directive::NonTerminals				NonTerminals;
+		typedef Directive::Terminals				Terminals;
 		typedef Directive::NonTerminals::iterator	NonTermsIter;
-		typedef std::map<ISocket *, IHandler *>		handlers;
+		typedef IProtocolCluster::Handlers			Handlers;
+		typedef IProtocolCluster::HandlerIter		HandlerIter;
 
 		Initiator(void);
 		Initiator(ConfigParser *configParser);
@@ -38,10 +37,13 @@ class	Initiator
 		std::string	getConfigFilePath(void) const;
 		void		setConfigFilePath(const ConfigFile aConfigFile);
 
-		std::map<ISocket *, IHandler *>			init(void);
+		std::map<ISocket *, IHandler *>		init(void);
 	private:
-		ConfigParser					*_mConfigParser;
-		ConfigFile					_mConfigFilePath;
+		ConfigParser								*_mConfigParser;
+		ConfigFile									_mConfigFilePath;
+		Handlers									_mGlobalHandlers;
+		
+		bool					_addToGlobalHandlers(const Handlers aHandlers);
 };
 
 #endif /*__INITIATOR_HPP__*///==================================================

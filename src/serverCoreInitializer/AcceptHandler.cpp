@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/11 15:27:14 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/14 13:19:48 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 11:17:22 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -17,6 +17,8 @@
 //====| destructor : >==========================================================
 AcceptHandler::~AcceptHandler(void)
 {
+	for (ServIter iter = _mServers.begin(); iter != _mServers.end(); ++iter)
+		delete *iter; 
 }
 
 //====| getHandle : return server socket >======================================
@@ -26,8 +28,22 @@ AcceptHandler::~AcceptHandler(void)
 }
 */
 
-//====| handleEvent : create recv handler >=====================================
-HandlerQueue	AcceptHandler::handleEvent(void)
+//====| getServers : return Servers of handler >================================
+AcceptHandler::Servers		AcceptHandler::getServers(void) const
 {
-	return (HandlerQueue());
+	return (_mServers);
+}
+
+//====| addServer : add IServer to set of Servers managed by handler >==========
+bool		AcceptHandler::addServer(IServer *aServer)
+{
+	if (find(_mServers.begin(), _mServers.end(), aServer) != _mServers.end())
+		return (false);
+	return (_mServers.push_back(aServer), true);
+}
+
+//====| handleEvent : create recv handler >=====================================
+IHandler	*AcceptHandler::handleEvent(void)
+{
+	return (NULL);
 }	

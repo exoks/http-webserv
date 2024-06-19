@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/18 18:46:44 by oussama
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/18 22:30:45 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 12:48:50 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -23,8 +23,7 @@ namespace http
 	class	Socket : public ISocket
 	{
 	public:
-		typedef ISocket::Listen Listen;
-		typedef ISocket::Fd	Fd;
+		typedef ISocket::Fd		Fd;
 		typedef ISocket::Host	Host;
 		typedef ISocket::Port	Port;
 
@@ -32,16 +31,17 @@ namespace http
 		Socket(std::string listen);
 		~Socket(void) {};
 
-//		Fd		getFd(void) const;
-//		Port		getPort(void) const;
-//		Host		getHost(void) const;
 		bool		operator ==(ISocket *aSocket);
-		Listen		getListen(void) const;	
+
+		std::string		getListen(void) const;	
+		Fd				getFd(void) const;
+		Port			getPort(void) const;
+		Host			getHost(void) const;
 	private:
-		std::string		_mListen;
-//		Fd			_mFd;
-		Host			_mHost;
-		Port			_mPort;
+		std::string				_mListen;
+		Fd						_mFd;
+		Host					_mHost;
+		Port					_mPort;
 	};
 };
 

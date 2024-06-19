@@ -30,6 +30,7 @@ SRC_FILES	:=	$(SRC_DIR)/configParser/ParserUtils.cpp\
 				$(SRC_DIR)/serverCoreInitializer/HttpSocket.cpp\
 				$(SRC_DIR)/serverCoreInitializer/HttpServer.cpp\
 				$(SRC_DIR)/serverCoreInitializer/HttpCluster.cpp\
+				$(SRC_DIR)/serverCoreInitializer/AcceptHandler.cpp\
 				$(SRC_DIR)/serverCoreInitializer/HttpProtocolFactory.cpp\
 				$(SRC_DIR)/main/main.cpp
 
