@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/18 17:09:56 by oussama
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 12:50:31 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 00:55:59 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -32,12 +32,9 @@ std::string	http::Socket::getListen(void) const
 }
 
 //====| operator == : >=========================================================
-bool	http::Socket::operator ==(ISocket *aSocket)
+bool	http::Socket::operator !=(const ISocket & aSocket)
 {
-	const http::Socket *httpSocket;
-
-	httpSocket = dynamic_cast<http::Socket *>(aSocket);
-	return (this->_mListen == httpSocket->_mListen);
+	return (this->_mListen != aSocket.getListen());
 }
 
 //====| getFd : fd getter >=====================================================
@@ -56,4 +53,13 @@ std::string	http::Socket::getPort(void) const
 std::string	http::Socket::getHost(void) const
 {
 	return (_mHost);
+}
+
+//====| createSocket : create http socket (Tcp Socket) >========================
+bool	http::Socket::createSocket(void)
+{
+	// _ parse Listen
+	// _ create socket
+	// _ bind Socket
+	return (true);
 }

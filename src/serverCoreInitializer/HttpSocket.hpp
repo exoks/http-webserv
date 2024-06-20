@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/18 18:46:44 by oussama
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 12:48:50 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 00:52:56 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -22,26 +22,28 @@ namespace http
 {
 	class	Socket : public ISocket
 	{
-	public:
-		typedef ISocket::Fd		Fd;
-		typedef ISocket::Host	Host;
-		typedef ISocket::Port	Port;
+		public:
+			typedef ISocket::Fd		Fd;
+			typedef ISocket::Host	Host;
+			typedef ISocket::Port	Port;
 
-		Socket(void);
-		Socket(std::string listen);
-		~Socket(void) {};
+			Socket(void);
+			Socket(std::string listen);
+			~Socket(void) {};
 
-		bool		operator ==(ISocket *aSocket);
+			bool		operator !=(const ISocket & aSocket);
 
-		std::string		getListen(void) const;	
-		Fd				getFd(void) const;
-		Port			getPort(void) const;
-		Host			getHost(void) const;
-	private:
-		std::string				_mListen;
-		Fd						_mFd;
-		Host					_mHost;
-		Port					_mPort;
+			std::string				getListen(void) const;	
+			Fd						getFd(void) const;
+			Port					getPort(void) const;
+			Host					getHost(void) const;
+
+			bool					createSocket(void);
+		private:
+			std::string				_mListen;
+			Fd						_mFd;
+			Host					_mHost;
+			Port					_mPort;
 	};
 };
 

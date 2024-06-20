@@ -11,21 +11,26 @@
 #                                                                              #
 ** ************************************************************************* **/
 
-# include "ConfigParser.hpp"
 # include "Initiator.hpp"
-
-class	IHandler;
 
 int		main(void)
 {
 	Initiator	initiator(new ConfigParser());
 //	Reactor		reactor(new PollMultiplexer);
-	
+	Initiator::Handlers	handlers;
+
 	try
 	{
-		initiator.init();
+		handlers = initiator.init();
+		std::cout << "==========================================================" << std::endl;
+		for (Initiator::HandlerIter iter = handlers.begin(); iter != handlers.end(); ++iter)
+		{
+			std::cout << "handler Socket : " << iter->first->getListen() << std::endl;
+		}
+		std::cout << "GlobalHandlers_Size : " << handlers.size() << std::endl;
+		std::cout << "==========================================================" << std::endl;
 //		reactor.registerHandler(queue);
-//		reactor.waitEvent(2000);	
+//		reactor.waitEvent(2000);
 	}
 	catch(const std::exception& e)
 	{

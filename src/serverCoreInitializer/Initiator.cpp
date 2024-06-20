@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 08:05:02 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/19 22:54:03 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 00:37:26 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -31,6 +31,7 @@ Initiator::Initiator(ConfigParser *configParser)
 Initiator::~Initiator(void)
 {
 	delete _mConfigParser;
+	// delete _mGlobalHandlers
 }
 
 //====| getConfigFile : get config file path >==================================
@@ -46,31 +47,37 @@ void	Initiator::setConfigFilePath(const ConfigFile aConfigFilePath)
 }
 
 //====| addToGlobalHandlers : add protocol handlers to global handlers >========
-bool	Initiator::_addToGlobalHandlers(const Handlers aHandlers)
+bool	Initiator::_addToGlobalHandlers(Handlers aHandlers)
 {
-	(void) aHandlers;
+	for (HandlerIter iter = aHandlers.begin(); iter != aHandlers.end(); ++iter)
+	{
+		_mGlobalHandlers.insert(*iter);
+	}
 	return (true);
 }
 
 //====| init : server >=========================================================
 std::map<ISocket *, IHandler *>	Initiator::init(void)
 {
-	Directive				g_directive;
-	NonTerminals			nTerms;
-	Handlers				protocolHandlers;
+	Directive					globalDirective;
+	NonTerminals				xClusters;
+	Handlers					xClusterHandlers;
 
 	_mConfigParser->openFile(this->_mConfigFilePath);
-	g_directive = _mConfigParser->parse();
-	nTerms = g_directive.mNonTerminal;
-	if (nTerms.empty() == true)
-		return (std::map<ISocket *, IHandler *>());
-	for (NonTermsIter iter = nTerms.begin(); iter != nTerms.end(); ++iter)
+	globalDirective = _mConfigParser->parse();
+	xClusters = globalDirective.mNonTerminal;
+	if (xClusters.empty() == true)
+		return (_mGlobalHandlers); // throw exception
+	for (NonTermsIter iter = xClusters.begin(); iter != xClusters.end(); ++iter)
 	{
-		if (iter->first == "http")
-			protocolHandlers = http::Cluster(*iter->second.begin()).createHandlers();
-		if (iter->first == "dns")
-			; // dns::Cluster(*iter->second.begin()).createHandlers();
-		_addToGlobalHandlers(protocolHandlers);
+		for (DirIter it = iter->second.begin(); it != iter->second.end(); ++it)
+		{
+			if (iter->first == "http")
+				xClusterHandlers = http::Cluster(*it).createHandlers();
+			if (iter->first == "dns")
+			;// xClusterHandlers = dns::Cluster(*it).createHandlers();
+			_addToGlobalHandlers(xClusterHandlers);
+		}
 	}
 	return (_mGlobalHandlers);
 }
