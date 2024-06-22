@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 08:05:02 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 00:37:26 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 22:37:30 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -37,7 +37,7 @@ Initiator::~Initiator(void)
 //====| getConfigFile : get config file path >==================================
 std::string	Initiator::getConfigFilePath(void) const
 {
-	return (_mConfigFilePath);
+	return (this->_mConfigFilePath);
 }
 
 //====| setConfigFile : set config file path >==================================
@@ -67,17 +67,17 @@ std::map<ISocket *, IHandler *>	Initiator::init(void)
 	globalDirective = _mConfigParser->parse();
 	xClusters = globalDirective.mNonTerminal;
 	if (xClusters.empty() == true)
-		return (_mGlobalHandlers); // throw exception
-	for (NonTermsIter iter = xClusters.begin(); iter != xClusters.end(); ++iter)
+		std::invalid_argument("Initiator : Empty Cluster");
+	for (NonTermsIter clus = xClusters.begin(); clus != xClusters.end(); ++clus)
 	{
-		for (DirIter it = iter->second.begin(); it != iter->second.end(); ++it)
-		{
-			if (iter->first == "http")
-				xClusterHandlers = http::Cluster(*it).createHandlers();
-			if (iter->first == "dns")
-			;// xClusterHandlers = dns::Cluster(*it).createHandlers();
+		Directives diretives = clus->second;
+		for (DirIter dir = directives.begin(); dir != directives.end(); ++dir) {
+			if (clus->first == "http")
+				xClusterHandlers = http::Cluster(*dir).createHandlers();
+			if (clus->first == "dns")
+			;// xClusterHandlers = dns::Cluster(*dir).createHandlers();
 			_addToGlobalHandlers(xClusterHandlers);
 		}
 	}
-	return (_mGlobalHandlers);
+	return (this->_mGlobalHandlers);
 }

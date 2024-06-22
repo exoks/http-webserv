@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/11 15:27:14 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/20 15:11:27 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 21:55:54 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -14,25 +14,25 @@
 
 # include "AcceptHandler.hpp"
 
-//====| destructor : >==========================================================
+//====| destructor : delete servers objects >===================================
 AcceptHandler::~AcceptHandler(void)
 {
-	for (ServIter iter = _mServers.begin(); iter != _mServers.end(); ++iter)
-		delete *iter; 
+	for (ServIter serv = _mServers.begin(); serv != _mServers.end(); ++serv)
+		delete *serv;
 }
 
-//====| getServers : return Servers of handler >================================
+//====| getServers : return the server members of this handler >================
 AcceptHandler::Servers		AcceptHandler::getServers(void) const
 {
-	return (_mServers);
+	return (this->_mServers);
 }
 
-//====| addServer : add IServer to set of Servers managed by handler >==========
-bool		AcceptHandler::addServer(IServer *aServer)
+//====| addServer : add IServer (http::Server) to the set of Servers >==========
+bool		AcceptHandler::addServer(const IServer *aServer)
 {
 	if (find(_mServers.begin(), _mServers.end(), aServer) != _mServers.end())
 		return (false);
-	return (_mServers.push_back(aServer), true);
+	return (_mServers.push_back(const_cast<IServer *>(aServer)), true);
 }
 
 //====| handleEvent : create recv handler >=====================================

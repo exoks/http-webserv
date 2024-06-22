@@ -25,7 +25,7 @@ int		main(void)
 		std::cout << "==========================================================" << std::endl;
 		for (Initiator::HandlerIter iter = handlers.begin(); iter != handlers.end(); ++iter)
 		{
-			std::cout << "handler Socket : " << iter->first->getListen() << std::endl;
+			std::cout << "handler Socket : " << iter->first->getFd() << std::endl;
 		}
 		std::cout << "GlobalHandlers_Size : " << handlers.size() << std::endl;
 		std::cout << "==========================================================" << std::endl;

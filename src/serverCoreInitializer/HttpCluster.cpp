@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 19:48:21 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 00:47:46 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 19:37:03 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -44,7 +44,7 @@ IServer *http::Cluster::_createServer(Directive servDir, Terminals usedTerms)
 std::vector<ISocket *> http::Cluster::_createSockets(Terminals dirTerms, Terminals usedTerms)
 {
 	std::vector<std::string>		listen;
-	Sockets							socket;
+	Sockets							sockets;
 	ISocket							*tmpSocket;
 
 	// This part must be optimized 
@@ -52,20 +52,21 @@ std::vector<ISocket *> http::Cluster::_createSockets(Terminals dirTerms, Termina
 		listen = usedTerms.lower_bound("listen")->second;
 	if (dirTerms.lower_bound("listen") != dirTerms.end())
 		listen = dirTerms.lower_bound("listen")->second;
-	for (ListenIter iter = listen.begin(); iter != listen.end(); ++iter)
-	{
+	for (ListenIter iter = listen.begin(); iter != listen.end(); ++iter) {
 		tmpSocket = http::ProtocolFactory::createSocket(*iter);
-		if (_findHandler(tmpSocket) == _mHttpHandlers.end())
-		{
-			socket.push_back(tmpSocket);
-			continue ;
+		if (_findHandler(tmpSocket) == _mHttpHandlers.end()) {
+			if (tmpSocket->bindSocket() == true)
+				sockets.push_back(tmpSocket);
 		}
-		socket.push_back(_findHandler(tmpSocket)->first);
-		delete tmpSocket;
+		else {
+			sockets.push_back(_findHandler(tmpSocket)->first);
+			delete tmpSocket;
+		}
 	}
-	return (socket);
+	return (sockets);
 }
 
+// use wrapped lower_bound or find
 //====| _findHandler : search for handler using socket >========================
 http::Cluster::HandlerIter http::Cluster::_findHandler(ISocket *aSocket)
 {
@@ -81,13 +82,16 @@ http::Cluster::HandlerIter http::Cluster::_findHandler(ISocket *aSocket)
 void	http::Cluster::_addServerToHandler(ISocket *aSocket, IServer *aServer)
 {
 	IHandler					*acceptHandler;
+	HandlerIter					handlerIter;
 
-	if (_findHandler(aSocket) == _mHttpHandlers.end())
-	{
-		acceptHandler = http::ProtocolFactory::createAcceptHandler();
-		_mHttpHandlers.insert(HandlerPair(aSocket, acceptHandler));
+	handlerIter = _findHandler(aSocket);
+	if (handlerIter != _mHttpHandlers.end()) {
+		handlerIter->second->addServer(aServer);
+		return ;
 	}
-	_findHandler(aSocket)->second->addServer(aServer);
+	acceptHandler = http::ProtocolFactory::createAcceptHandler();
+	acceptHandler->addServer(aServer);
+	_mHttpHandlers.insert(HandlerPair(aSocket, acceptHandler));
 }
 
 //====| createAcceptHandler : create accept handlers based on sockets >=========

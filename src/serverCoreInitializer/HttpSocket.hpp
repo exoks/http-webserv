@@ -5,46 +5,48 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/18 18:46:44 by oussama
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 00:52:56 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 21:03:36 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
 //  ⠀⠀⠀⠀⠀⡄⠀⠀⠀⠘⢧⡀⠀⠀⠸⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠐⠋⠀⠀⠀                     𓄂 oussama ezzaou𓆃  
 //  ⠀⠀⠀⠀⠀⠘⠄⣀⡀⠸⠓⠀⠀⠀⠠⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                                              
 
-//====| HttpSocket >=============================================================
+//====| HttpSocket >============================================================
 # ifndef __HTTPSOCKET_HPP__
 # define __HTTPSOCKET_HPP__
 
 # include "ISocket.hpp"
+# include "ParserUtils.hpp"
 
 namespace http
 {
 	class	Socket : public ISocket
 	{
 		public:
-			typedef ISocket::Fd		Fd;
-			typedef ISocket::Host	Host;
-			typedef ISocket::Port	Port;
+			typedef ISocket::Fd			Fd;
+			typedef ISocket::Port		Port;
+			typedef ISocket::HostName	HostName;
 
 			Socket(void);
-			Socket(std::string listen);
-			~Socket(void) {};
+			Socket(std::string aListen);
+			~Socket(void);
 
 			bool		operator !=(const ISocket & aSocket);
 
-			std::string				getListen(void) const;	
 			Fd						getFd(void) const;
 			Port					getPort(void) const;
-			Host					getHost(void) const;
+			HostName				getHostName(void) const;
 
-			bool					createSocket(void);
+			bool					bindSocket(void);
 		private:
-			std::string				_mListen;
-			Fd						_mFd;
-			Host					_mHost;
-			Port					_mPort;
+			std::string					_mListen;
+			Fd							_mFd;
+			Port						_mPort;
+			HostName					_mHostName;
+
+//			uint16_t			_extractPort(const std::string aPort);
+//			uint32_t			_extractHostName(const std::string aHostName);
 	};
 };
-
-#endif /*__HTTPSOCKET_HPP__*///=======================================
+#endif /*__HTTPSOCKET_HPP__*///=================================================
