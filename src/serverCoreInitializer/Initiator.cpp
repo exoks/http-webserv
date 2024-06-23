@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 08:05:02 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/22 15:00:04 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/23 15:45:07 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -27,14 +27,13 @@ Initiator::Initiator(ConfigParser *configParser)
 	this->_mConfigParser = configParser;
 }
 
-//====| Initiator : destructor >================================================
+//====| destructor : delete config parser instance >============================
 Initiator::~Initiator(void)
 {
-	delete _mConfigParser;
-	// delete _mGlobalHandlers
+	delete this->_mConfigParser;
 }
 
-//====| getConfigFile : get config file path >==================================
+//====| getConfigFile : return config file path >===============================
 std::string	Initiator::getConfigFilePath(void) const
 {
 	return (this->_mConfigFilePath);
@@ -50,13 +49,11 @@ void	Initiator::setConfigFilePath(const ConfigFile aConfigFilePath)
 bool	Initiator::_addToGlobalHandlers(Handlers aHandlers)
 {
 	for (HandlerIter iter = aHandlers.begin(); iter != aHandlers.end(); ++iter)
-	{
 		_mGlobalHandlers.insert(*iter);
-	}
 	return (true);
 }
 
-//====| init : server >=========================================================
+//====| init : intintiate core server & create protocols handlers >=============
 std::map<ISocket *, IHandler *>	Initiator::init(void)
 {
 	Directive					globalDirective;

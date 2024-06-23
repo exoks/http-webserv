@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 19:48:21 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/22 20:06:43 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/23 19:25:20 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -30,64 +30,62 @@ http::Cluster::~Cluster(void)
 {
 }
 
-//====| getNecessaryTerms : Wich terms must be used dirTerms or usedTerms >=====
-std::vector<std::string> http::Cluster::_getNecessaryTerms(std::string aKey, Terminals dirTerms, Terminals usedTerms)
+//====| getNecessaryTerms : Wich terms must be used (dirTerms or gDirTerms) >===
+std::vector<std::string> http::Cluster::_getTerms(String aKey, Terminals dirTerms, Terminals gDirTerms)
 {
-	TermsIter		iter;
+	TermsIter				termsIter;
 
-	iter = dirTerms.lower_bound(aKey);
-	if (iter != dirTerms.end())
-		return (iter->second);
-	iter = usedTerms.lower_bound(aKey);
-	if (iter != usedTerms.end())
-		return (iter->second);
-	return (std::vector<std::string>());
+	termsIter = dirTerms.lower_bound(aKey);
+	if (termsIter != dirTerms.end())
+		return (termsIter->second);
+	termsIter = gDirTerms.lower_bound(aKey);
+	if (termsIter != gDirTerms.end())
+		return (termsIter->second);
+	return (std::vector<String>());
 }
 
 //====| createServer : create server instance from Directive >==================
-IServer *http::Cluster::_createServer(Directive servDir, Terminals usedTerms)
+IServer *http::Cluster::_createServer(Directive srvDir, Terminals gSrvDirTerms)
 {
-	(void) usedTerms;
-	(void) servDir;
+	(void) gSrvDirTerms;
+	(void) srvDir;
 
-	// start with terminals
-	
+	std::map<std::string, std::vector<std::string> >	dirlocations;
+
+	NonTerminals	subDir = srvDir.mNonTerminal;
+	for (NonTermsIter iter = subDir.begin(); iter != subDir.end(); ++iter)
+	{
+		if (iter->first == "location")
+		{
+			std::vector<Directive> locations = iter->second;
+			for (DirIter it = locations.begin(); it != locations.end(); ++it)
+				; //_addLocations(it->mTerminal);
+		}
+	}
 	return (NULL);
 }
 
 //====| createSockets : create sockets instances used by servers >==============
-std::vector<ISocket *> http::Cluster::_createSockets(Terminals dirTerms, Terminals usedTerms)
+std::vector<ISocket *> http::Cluster::_createSockets(Terminals dirTerms, Terminals gDirTerms)
 {
-	std::vector<std::string>		listen;
-	Sockets							sockets;
-	ISocket							*tmpSocket;
+	std::vector<String>						listen;
+	Sockets									sockets;
+	ISocket									*tmpSocket;
 
-	// This part must be optimized 
-	listen = _getNecessaryTerms("listen", dirTerms, usedTerms);
+	listen = _getTerms("listen", dirTerms, gDirTerms);
 	for (ListenIter iter = listen.begin(); iter != listen.end(); ++iter) {
 		tmpSocket = http::ProtocolFactory::createSocket(*iter);
-		if (_findHandler(tmpSocket) == _mHttpHandlers.end()) {
+		HandlerIter hIter = alg::find(_mHttpHandlers, tmpSocket);
+		if (hIter == this->_mHttpHandlers.end()) {
 			if (tmpSocket->bindSocket() == true)
 				sockets.push_back(tmpSocket);
 		}
 		else {
-			sockets.push_back(_findHandler(tmpSocket)->first);
+			sockets.push_back(hIter->first);
 			delete tmpSocket;
 		}
 	}
 	return (sockets);
-}
-
-// use wrapped lower_bound or find
-//====| _findHandler : search for handler using socket >========================
-http::Cluster::HandlerIter http::Cluster::_findHandler(ISocket *aSocket)
-{
-	HandlerIter	iter;
-
-	iter = _mHttpHandlers.begin();
-	while (iter != _mHttpHandlers.end() && *iter->first != *aSocket)
-		++iter;
-	return (iter);
 }
 
 //====| _addServerToHandler : add Server to handler >===========================
@@ -96,49 +94,49 @@ void	http::Cluster::_addServerToHandler(ISocket *aSocket, IServer *aServer)
 	IHandler					*acceptHandler;
 	HandlerIter					handlerIter;
 
-	handlerIter = _findHandler(aSocket);
+	handlerIter = alg::find(_mHttpHandlers, aSocket);
 	if (handlerIter != _mHttpHandlers.end()) {
 		handlerIter->second->addServer(aServer);
 		return ;
 	}
 	acceptHandler = http::ProtocolFactory::createAcceptHandler();
 	acceptHandler->addServer(aServer);
-	_mHttpHandlers.insert(HandlerPair(aSocket, acceptHandler));
+	this->_mHttpHandlers.insert(HandlerPair(aSocket, acceptHandler));
 }
 
 //====| createAcceptHandler : create accept handlers based on sockets >=========
-void http::Cluster::_createAcceptHandlers(std::string key, Directives servDirs)
+void http::Cluster::_createAcceptHandlers(String key, Directives servDirs)
 {
-	Terminals					usedTerms;
+	Terminals					gDirTerms;
 	Sockets						sockets;
 
-	usedTerms = _mFilteredTerms.lower_bound(key)->second;
+	gDirTerms = this->_mFilteredTerms.lower_bound(key)->second;
 	for (DirIter dir = servDirs.begin(); dir != servDirs.end(); ++dir)
 	{
-		sockets = _createSockets(dir->mTerminal, usedTerms);
+		sockets = _createSockets(dir->mTerminal, gDirTerms);
 		for (SockIter sock = sockets.begin(); sock != sockets.end(); ++sock)
-			_addServerToHandler(*sock, _createServer(*dir, usedTerms));
+			_addServerToHandler(*sock, _createServer(*dir, gDirTerms));
 	}
 }
 
 //====| filterTerminals : filter terminals based on nonTerminal key >===========
-void	http::Cluster::_filterTerminals(const std::string key)
+void	http::Cluster::_filterTerminals(const String key)
 {
-	Terminals			gTerms, usedTerms;
+	Terminals			gTerms, gDirTerms;
 
-	gTerms = _mHttpDirective.mTerminal;
+	gTerms = this->_mHttpDirective.mTerminal;
 	if (_mFilteredTerms.lower_bound(key) != _mFilteredTerms.end())
 		return ;
 	for (TermsIter iter = gTerms.begin(); iter != gTerms.end(); ++iter)
 	{
 		if (Dictionary::find(key, iter->first) <= (Simple | List))
-			usedTerms.insert(*iter);
+			gDirTerms.insert(*iter);
 	}
-	_mFilteredTerms.insert(std::pair<std::string, Terminals>(key, usedTerms));
+	this->_mFilteredTerms.insert(std::pair<String, Terminals>(key, gDirTerms));
 };
 
 //====| createHandlers : create http handlers used by reactor >=================
-std::map<ISocket *, IHandler *> http::Cluster::createHandlers(void)
+std::map<ISocket *, IHandler *>	http::Cluster::createHandlers(void)
 {
 	NonTerminals				nTerms;
 
@@ -149,5 +147,5 @@ std::map<ISocket *, IHandler *> http::Cluster::createHandlers(void)
 		if (iter->first == "server")
 			_createAcceptHandlers(iter->first, iter->second);
 	}
-	return (_mHttpHandlers);
+	return (this->_mHttpHandlers);
 }

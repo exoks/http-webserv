@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/05 12:41:44 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/22 18:24:48 by oussama
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/23 20:50:29 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -24,25 +24,29 @@ namespace http
 	class	Server : public IServer 
 	{
 		public:
-			typedef std::string		String;
-
 			Server(void);
 			~Server(void);
 
-		class	Location
-		{
-			public:
-				String			getRoot(void) const;
-				std::vector<String>	getIndex(void) const;
-			private:
-				String			_mRoot;
-				std::vector<String>	_mIndex;
-		};
+			class	Location
+			{
+				public:
+					std::string						getRoot(void) const;
+					std::vector<std::string>		getIndex(void) const;
 
-			bool	_addHostName(const String _aHostName);
+			//		void				addRoot(std::string root);
+			//		void				addIndex(std::string index);
+			
+			//		this function will throw and error in case of repeated location
+			//		will use pointer to member function (addX)
+			//		void				addLocationMember(std::pair<std::string, std::vector<std::string> > loaction);	
+				private:
+					std::string						_mRoot;
+					std::vector<std::string>		_mIndex;
+			};
 		private:
-			std::vector<String>		_mHostNames;
+			std::vector<std::string>				_mHostNames;
 
+			bool				_addHostName(const std::string _aHostName);
 	};
 };
 

@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/07 19:51:49 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 10:11:02 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/23 13:41:24 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -37,17 +37,31 @@ namespace prs
 	keyValuePair  lineToPair(const std::string& line, const char sep);
 
 	std::vector<std::string> split(const std::string str, const char sep);
+};
 
-	/*template <class T1, class T2>
-	typename std::map<T1 *, T2 *>::iterator lowerBound(std::map<T1 *, T2 *> & map, T1 *key)
+namespace alg
+{
+	template <class T1, class T2>
+	typename std::map<T1 *, T2 *>::iterator find(std::map<T1 *, T2 *> & map, T1 *key)
 	{
 		typename std::map<T1 *, T2 *>::iterator	iter;
 
 		iter = map.begin();
-		while (iter != map.end() && !(*iter->first == *key))
+		while (iter != map.end() && *iter->first != *key)
 			++iter;
 		return (iter);
-	}*/
+	}
+
+	template <class T1, class T2>
+	typename std::map<T1, T2>::iterator find(std::map<T1, T2> & map, T1 key)
+	{
+		typename std::map<T1, T2>::iterator	iter;
+
+		iter = map.begin();
+		while (iter != map.end() && !(iter->first == key))
+			++iter;
+		return (iter);
+	}
 };
 
 #endif /* __PARSERUTILS_HPP__ */
