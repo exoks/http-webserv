@@ -15,8 +15,8 @@
 
 int		main(void)
 {
-	Initiator	initiator(new ConfigParser());
-//	Reactor		reactor(new PollMultiplexer);
+	Initiator		initiator(new ConfigParser());
+//	Reactor			reactor(new PollMultiplexer);
 	Initiator::Handlers	handlers;
 
 	try

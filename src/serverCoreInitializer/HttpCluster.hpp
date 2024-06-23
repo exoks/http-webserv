@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 19:45:26 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 22:32:04 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/22 19:47:19 by oussama
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -48,13 +48,14 @@ namespace http
 		std::map<std::string, Terminals>					_mFilteredTerms;
 		std::map<ISocket *, IHandler *>						_mHttpHandlers;
 
-		void		_filterTerminals(const std::string key);
-		void		_addServerToHandler(ISocket *aSocket, IServer *aServer);
-		HandlerIter	_findHandler(ISocket *aSocket);
+		void				_filterTerminals(const std::string key);
+		void				_addServerToHandler(ISocket *aSocket, IServer *aServer);
+		HandlerIter			_findHandler(ISocket *aSocket);
+		std::vector<std::string>	_getNecessaryTerms(const std::string aKey, Terminals dirTerms, Terminals gTerms);
 
-		void		_createAcceptHandlers(std::string key, Directives servs);
-		Sockets		_createSockets(Terminals dirTerms, Terminals usedTerms);
-		IServer		*_createServer(Directive dirServ, Terminals terms);
+		void			_createAcceptHandlers(std::string key, Directives servs);
+		Sockets			_createSockets(Terminals dirTerms, Terminals usedTerms);
+		IServer			*_createServer(Directive dirServ, Terminals terms);
 	};
 }
 

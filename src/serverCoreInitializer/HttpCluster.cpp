@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 19:48:21 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/21 19:37:03 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/22 20:06:43 by oussama
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -30,13 +30,28 @@ http::Cluster::~Cluster(void)
 {
 }
 
+//====| getNecessaryTerms : Wich terms must be used dirTerms or usedTerms >=====
+std::vector<std::string> http::Cluster::_getNecessaryTerms(std::string aKey, Terminals dirTerms, Terminals usedTerms)
+{
+	TermsIter		iter;
+
+	iter = dirTerms.lower_bound(aKey);
+	if (iter != dirTerms.end())
+		return (iter->second);
+	iter = usedTerms.lower_bound(aKey);
+	if (iter != usedTerms.end())
+		return (iter->second);
+	return (std::vector<std::string>());
+}
+
 //====| createServer : create server instance from Directive >==================
 IServer *http::Cluster::_createServer(Directive servDir, Terminals usedTerms)
 {
-	(void) servDir;
 	(void) usedTerms;
+	(void) servDir;
 
-	// how to build server ?
+	// start with terminals
+	
 	return (NULL);
 }
 
@@ -48,10 +63,7 @@ std::vector<ISocket *> http::Cluster::_createSockets(Terminals dirTerms, Termina
 	ISocket							*tmpSocket;
 
 	// This part must be optimized 
-	if (usedTerms.lower_bound("listen") != usedTerms.end())
-		listen = usedTerms.lower_bound("listen")->second;
-	if (dirTerms.lower_bound("listen") != dirTerms.end())
-		listen = dirTerms.lower_bound("listen")->second;
+	listen = _getNecessaryTerms("listen", dirTerms, usedTerms);
 	for (ListenIter iter = listen.begin(); iter != listen.end(); ++iter) {
 		tmpSocket = http::ProtocolFactory::createSocket(*iter);
 		if (_findHandler(tmpSocket) == _mHttpHandlers.end()) {
