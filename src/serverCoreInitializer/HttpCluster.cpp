@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 19:48:21 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/23 19:25:20 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/24 21:47:26 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -31,7 +31,8 @@ http::Cluster::~Cluster(void)
 }
 
 //====| getNecessaryTerms : Wich terms must be used (dirTerms or gDirTerms) >===
-std::vector<std::string> http::Cluster::_getTerms(String aKey, Terminals dirTerms, Terminals gDirTerms)
+std::vector<std::string> http::Cluster
+	::_getTerms(String aKey, Terminals dirTerms, Terminals gDirTerms)
 {
 	TermsIter				termsIter;
 
@@ -44,29 +45,53 @@ std::vector<std::string> http::Cluster::_getTerms(String aKey, Terminals dirTerm
 	return (std::vector<String>());
 }
 
+//====| extractServLocation : extract all server location members >=============
+std::map<std::string, std::vector<std::string> > http::Cluster
+	::_extractServLocation(Directive srvDir)
+{
+	std::map<std::string, std::vector<std::string> >	location;
+	NonTerminals										mapLocation;
+	Directives											dirLocation;
+
+	mapLocation = srvDir.mNonTerminal;
+	if (mapLocation.lower_bound("location") != mapLocation.end()
+			&& mapLocation.size() > 1)	
+	{
+		dirLocation = mapLocation.lower_bound("location")->second;
+		for (DirIter iter = dirLocation.begin(); iter != dirLocation.end(); ++iter)
+			;
+	}
+	// loop over Terminals 
+	return (location);
+}
+
 //====| createServer : create server instance from Directive >==================
 IServer *http::Cluster::_createServer(Directive srvDir, Terminals gSrvDirTerms)
 {
-	(void) gSrvDirTerms;
 	(void) srvDir;
+	(void) gSrvDirTerms;
+	
+	/*http::Server							*server;
+	Directives								dirLocation;
+	NonTerminals							nTerms;
 
-	std::map<std::string, std::vector<std::string> >	dirlocations;
-
-	NonTerminals	subDir = srvDir.mNonTerminal;
-	for (NonTermsIter iter = subDir.begin(); iter != subDir.end(); ++iter)
+	std::cout << "=================== Server =====================" << std::endl;
+	nTerms = srvDir.mNonTerminal;
+	if (nTerms.lower_bound("location")->first != "location")
 	{
-		if (iter->first == "location")
-		{
-			std::vector<Directive> locations = iter->second;
-			for (DirIter it = locations.begin(); it != locations.end(); ++it)
-				; //_addLocations(it->mTerminal);
-		}
+		std::cout << "Error : Not Found" << std::endl;
+		return (NULL);
 	}
+	server = dynamic_cast<http::Server *>(http::ProtocolFactory::createServer());
+	dirLocation = srvDir.mNonTerminal.lower_bound("location")->second;
+	for (DirIter iter = dirLocation.begin(); iter != dirLocation.end(); ++iter)
+		server->addLocation(iter->mTerminal);*/
 	return (NULL);
 }
 
 //====| createSockets : create sockets instances used by servers >==============
-std::vector<ISocket *> http::Cluster::_createSockets(Terminals dirTerms, Terminals gDirTerms)
+std::vector<ISocket *> http::Cluster
+	::_createSockets(Terminals dirTerms, Terminals gDirTerms)
 {
 	std::vector<String>						listen;
 	Sockets									sockets;

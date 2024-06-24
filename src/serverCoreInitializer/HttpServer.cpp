@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/06 20:40:54 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/23 20:50:26 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/24 19:44:53 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -25,15 +25,56 @@ http::Server::~Server(void)
 }
 
 //====| _addHostName : add HostName to the existing host names >================
-bool	http::Server::_addHostName(const std::string aHostName)
+bool	http::Server::addHostName(const String aHostName)
 {
-	// check if host name is repeated
 	this->_mHostNames.push_back(aHostName);
 	return (true);
 }
 
-//====| addLocations : add locations >==========================================
-/*void	http::Server::Location::addLocationMember(std::pair<std::string, std::vector<std::string> aMember)
+//====| addIndex : add Index member locaiton >==================================
+void	http::Server::Location::addRoot(String aRoot)
 {
-	(void) locations;		
-}*/
+	if (this->_mRoot.empty() == false || this->_mRoot == aRoot)
+	{
+		std::cerr << "Duplicated Location: Root: " + aRoot << std::endl;
+		return;
+	}
+	this->_mRoot = aRoot;
+}
+
+//====| addIndex : add Index member locaiton >==================================
+void	http::Server::Location::addIndex(String aIndex)
+{
+	if (std::find(_mIndex.begin(), _mIndex.end(), aIndex) != _mIndex.end())
+	{
+		std::cerr << "Duplicated Location: Index: " + aIndex << std::endl;
+		return ;
+	}
+	this->_mIndex.push_back(aIndex);
+}	
+
+//====| addMember : add locations >=============================================
+void	http::Server::Location::addMember(std::pair<String, std::vector<String> > aMember)
+{
+	std::vector<String>		memberVals = aMember.second;
+	String					memberName = aMember.first;
+	String					member[2] = {"root", "index"};
+	void					(http::Server::Location::*fun[2])(String) = {
+															&Location::addRoot,
+															&Location::addIndex
+															};
+
+	for (unsigned int memberIdx = 0; memberIdx < 2; ++memberIdx)
+	{
+		unsigned int valIdx = -1;
+		while (++valIdx < memberVals.size() && member[memberIdx] == memberName)
+			(this->*fun[memberIdx])(memberVals[valIdx]);
+	}
+}
+
+//====| addLocation : add Location >============================================
+bool	http::Server::addLocation(std::map<String, std::vector<String> > aLocation)
+{
+	(void) aLocation;
+	return (true);
+}
