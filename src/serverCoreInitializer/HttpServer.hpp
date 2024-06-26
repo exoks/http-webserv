@@ -5,7 +5,7 @@
 //  ⢀⠔⠉⠀⠊⠿⠿⣿⠂⠠⠢⣤⠤⣤⣼⣿⣶⣶⣤⣝⣻⣷⣦⣍⡻⣿⣿⣿⣿⡀                                              
 //  ⢾⣾⣆⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇                                              
 //  ⠀⠈⢋⢹⠋⠉⠙⢦⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇       Created: 2024/06/05 12:41:44 by oezzaou
-//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/24 19:44:16 by oezzaou
+//  ⠀⠀⠀⠑⠀⠀⠀⠈⡇⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇       Updated: 2024/06/26 19:50:04 by oezzaou
 //  ⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢀⣾⣿⣿⠿⠟⠛⠋⠛⢿⣿⣿⠻⣿⣿⣿⣿⡿⠀                                              
 //  ⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⢠⣿⣟⣭⣤⣶⣦⣄⡀⠀⠀⠈⠻⠀⠘⣿⣿⣿⠇⠀                                              
 //  ⠀⠀⠀⠀⠀⠱⠤⠊⠀⢀⣿⡿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠘⣿⠏⠀⠀                             𓆩♕𓆪      
@@ -24,31 +24,34 @@ namespace http
 	class	Server : public IServer 
 	{
 		public:
-			typedef std::string						String;
-			
+			typedef std::string								String;
+			typedef Directive::Terminals					Terminals;
+			typedef Directive::Terminals::iterator			TermsIter;
+
 			Server(void);
 			~Server(void);
 
-			class	Location
-			{
-				public:
-					std::string						getRoot(void) const;
-					std::vector<std::string>		getIndex(void) const;
+		bool	addHostName(const std::string _aHostName); // add map of host names
+		void	addLocation(Terminals aHttp, Terminals aServer, Terminals aLocation); // Terminals
 
-					void							addRoot(std::string root);
-					void							addIndex(std::string index);
-			
-					void	addMember(std::pair<std::string, std::vector<std::string> > location);	
-				private:
-					std::string						_mRoot;
-					std::vector<std::string>		_mIndex;
-			};
-	
-		bool	addHostName(const std::string _aHostName);
-		bool	addLocation(std::map<String, std::vector<String> > aLocation);
+		class	Location
+		{
+			public:
+				Location(void) {};
+				std::string							getRoot(void) const;
+				std::vector<std::string>			getIndex(void) const;
 
+				void								addRoot(std::string root);
+				void								addIndex(std::string index);
+
+				http::Server::Location	addMember(String aKey, std::vector<String> aVal);
+			private:
+				std::string							_mRoot;
+				std::vector<std::string>			_mIndex;
+		};
 		private:
 			std::vector<std::string>				_mHostNames;
+			std::vector<Server::Location>			_mLocations;
 	};
 };
 
