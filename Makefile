@@ -15,26 +15,52 @@ NAME		:=	webserv
 
 #=== Directories : ===========================================================
 SRC_DIR		:=	src
-OBJ_DIR		:=	build
-INC_DIR		:=	$(SRC_DIR)/configParser\
-				$(SRC_DIR)/main\
-				$(SRC_DIR)/serverCoreInitializer\
+OBJ_DIR		:=	.build
+INC_DIR		:=	$(SRC_DIR)/utils\
+				$(SRC_DIR)/core/configParser\
+				$(SRC_DIR)/core/multiplexer\
+				$(SRC_DIR)/core/serverCore\
+				$(SRC_DIR)/core/reactor\
+				$(SRC_DIR)/http/factory\
+				$(SRC_DIR)/http/module\
+				$(SRC_DIR)/http/handler\
 				interface
 
 #=== Files : =================================================================
-SRC_FILES	:=	$(SRC_DIR)/configParser/ParserUtils.cpp\
-				$(SRC_DIR)/configParser/Directive.cpp\
-				$(SRC_DIR)/configParser/Dictionary.cpp\
-				$(SRC_DIR)/configParser/ConfigParser.cpp\
-				$(SRC_DIR)/serverCoreInitializer/Initiator.cpp\
-				$(SRC_DIR)/serverCoreInitializer/HttpSocket.cpp\
-				$(SRC_DIR)/serverCoreInitializer/HttpServer.cpp\
-				$(SRC_DIR)/serverCoreInitializer/HttpCluster.cpp\
-				$(SRC_DIR)/serverCoreInitializer/AcceptHandler.cpp\
-				$(SRC_DIR)/serverCoreInitializer/HttpProtocolFactory.cpp\
-				$(SRC_DIR)/main/main.cpp
+SRC_FILES	:=	$(SRC_DIR)/utils/Utils.cpp\
+				\
+				$(SRC_DIR)/core/configParser/Dictionary.cpp\
+				$(SRC_DIR)/core/configParser/Directive.cpp\
+				$(SRC_DIR)/core/configParser/ConfigParser.cpp\
+				\
+				$(SRC_DIR)/core/multiplexer/SelectMultiplexer.cpp\
+				$(SRC_DIR)/core/reactor/Reactor.cpp\
+				\
+				$(SRC_DIR)/core/serverCore/ServerCore.cpp\
+				$(SRC_DIR)/core/serverCore/main.cpp\
+				\
+				$(SRC_DIR)/http/factory/HttpFactory.cpp\
+				$(SRC_DIR)/http/module/HttpException.cpp\
+				$(SRC_DIR)/http/module/HttpCluster.cpp\
+				$(SRC_DIR)/http/module/HttpServer.cpp\
+				$(SRC_DIR)/http/module/HttpClient.cpp\
+				$(SRC_DIR)/http/module/HttpRequest.cpp\
+				$(SRC_DIR)/http/module/HttpErrorPage.cpp\
+				$(SRC_DIR)/http/module/HttpLocation.cpp\
+				$(SRC_DIR)/http/module/HttpAResponse.cpp\
+				$(SRC_DIR)/http/module/HttpRawResponse.cpp\
+				$(SRC_DIR)/http/module/HttpFileResponse.cpp\
+				$(SRC_DIR)/http/module/HttpCgiResponse.cpp\
+				$(SRC_DIR)/http/module/HttpBufferReader.cpp\
+				$(SRC_DIR)/http/module/HttpChunkReader.cpp\
+				\
+				$(SRC_DIR)/http/handler/HttpAcceptHandler.cpp\
+				$(SRC_DIR)/http/handler/HttpRecvHandler.cpp\
+				$(SRC_DIR)/http/handler/HttpSendHandler.cpp\
+				$(SRC_DIR)/http/handler/HttpGetHandler.cpp\
+				$(SRC_DIR)/http/handler/HttpCgiHandler.cpp
 
-INC_FILES	:=	$(foreach dir, $(INC_DIR), $(wildcard $(dir)/*.hpp))	
+INC_FILES	:=	$(foreach dir, $(INC_DIR), $(wildcard $(dir)/*.hpp))
 
 OBJ_FILES	:=	$(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 

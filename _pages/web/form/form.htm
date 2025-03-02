@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+            background-color: #333;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            border-radius: 5px;
+            padding: 25px;
+            margin-top: -1px;
+        }
+        input[type="file"]::-webkit-file-upload-button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background: #0056b3;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 11px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Files</h2>
+        <form action="/form/upload.pl" method="post" enctype="multipart/form-data">
+            <input type="file" name="upload_file1" id="fileInput1" /><br/>
+            <input type="file" name="upload_file2" id="fileInput2" /><br/><br/>
+            <input type="submit" value="Upload Files" />
+        </form>
+    </div>
+</body>
+</html>

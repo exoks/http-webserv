@@ -1,0 +1,34 @@
+meme_type: html         text/html
+meme_type: htm          text/html
+meme_type: shtml        text/html
+meme_type: css          text/css
+
+meme_type: txt          text/plain
+meme_type: js           text/javascript
+meme_type: json         application/json
+
+meme_type: jpg          image/jpeg
+meme_type: jpeg         image/jpeg
+meme_type: jpe          image/jpeg
+meme_type: png          image/png
+meme_type: gif          image/gif
+meme_type: svg          image/svg+xml
+
+meme_type: pdf          application/pdf
+meme_type: xml          application/xml
+
+meme_type: zip          application/zip
+meme_type: gzip         application/gzip
+
+meme_type: mp3          audio/mpeg
+meme_type: wav          audio/x-wav
+
+meme_type: mp4          video/mp4
+meme_type: webm         video/webm
+
+meme_type: ico          image/x-icon
+
+meme_type: otf          font/otf
+meme_type: ttf          font/ttf
+meme_type: woff         font/woff
+meme_type: woff2        font/woff2
